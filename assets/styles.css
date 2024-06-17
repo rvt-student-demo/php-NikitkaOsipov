@@ -58,3 +58,9 @@ nav ul li a:hover {
     background-color: gray;
     color: white;
 }
+
+.text-error {
+    display: block;
+    color: red;
+    font-weight: bold;
+}

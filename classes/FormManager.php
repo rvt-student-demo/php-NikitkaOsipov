@@ -29,18 +29,13 @@ class FormManager
     public static function validateFormData($formData)
     {
         $formErrors = [];
-
-        if (ctype_alnum($formData[0]))
+        if (!preg_match('/^[a-zA-Z0-9\s]+$/', $formData[0]))
         {
             $formErrors["name"] = "Name must contain only letters and numbers";
-        }
-        if (filter_var($formData[1], FILTER_VALIDATE_EMAIL))
-        {
+        } if (!filter_var($formData[1], FILTER_VALIDATE_EMAIL)){
             $formErrors["email"] = "Invalid email";
-        }
-        if (strlen($formData[2]) >= 10)
-        {
-            $formErrors["Message"] = "Mesage must be at least 10 characters long";
+        } if (strlen($formData[2]) <= 10) {
+            $formErrors["message"] = "Mesage must be at least 10 characters long";
         }
 
         // !preg_match('/^[a-zA-Z0-9\s]+$/'
@@ -52,5 +47,13 @@ class FormManager
         // }
 
         return $formErrors;
+    }
+
+    public static function getInputError($inputField)
+    {
+        if (isset($_SESSION["form_errors"][$inputField])
+        && !empty($_SESSION["form_errors"][$inputField])) {
+            return $_SESSION["form_errors"][$inputField];
+        }
     }
 }

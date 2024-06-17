@@ -2,16 +2,21 @@
 
 include "classes/FormManager.php";
 
+session_start();
+
+$formErrors = [];
+
 if (FormManager::isPostrequest()) {
     $name = $_POST["name"];
     $email = $_POST["email"];
     $message = $_POST["message"];
 
     $formData = [$name, $email, $message];
-    $formErrors = FormManager::validateFormData($formData);
+
+    $_SESSION["form_errors"] = FormManager::validateFormData($formData);
 
     // Saglabāt datus csv failā (da)
-    if (empty($formErrors)) {
+    if (empty($_SESSION["form_errors"])) {
         FormManager::saveDataToCsv($formData);
     }
     // Redirect to Contact page with GET request
@@ -28,10 +33,28 @@ if (FormManager::isPostrequest()) {
     <form action="" method="POST">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name">
+        <span class="text-error">
+            <?php 
+                echo FormManager::getInputError("name");
+            ?>
+        </span>
+        
         <label for="email">Email:</label>
         <input type="email" id="email" name="email">
+        <span class="text-error"></span>
+            <?php 
+                echo FormManager::getInputError("email");
+            ?> 
+        </span>
+
         <label for="message">Message:</label>
         <textarea id="message" name="message"></textarea>
+        <span class="text-error">
+            <?php 
+                echo FormManager::getInputError("message");
+            ?>
+        </span>
+
         <input type="submit" value="Submit">
     </form>
 </body>
